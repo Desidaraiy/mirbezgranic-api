@@ -12,74 +12,84 @@ const connection = mysql.createConnection({
 });
 
 connection.connect((err) => {
-    if (err) {
-        console.error('Ошибка подключения к базе данных: ', err);
-    } else {
-        console.log('Подключение к базе данных успешно установлено');
-    }
+  if (err) {
+    console.error('Ошибка подключения к базе данных: ', err);
+  } else {
+    console.log('Подключение к базе данных успешно установлено');
+  }
 });
 
 function generateToken() {
-    const length = 20; // Длина токена
-    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Допустимые символы
-    let token = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      token += characters.charAt(randomIndex);
-    }
-    return token;
+  const length = 20; // Длина токена
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Допустимые символы
+  let token = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    token += characters.charAt(randomIndex);
+  }
+  return token;
 }
 
 const app = express();
 
-// For parsing application/json
 app.use(express.json());
- 
-// For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/admin', (req, res) => {
-    res.send('Привет, администратор!');
+  res.send('Привет, администратор!');
 });
   
 app.get('/admin/get-users', (req, res) => {
-    const query = 'SELECT * FROM users';
-    connection.query(query, (error, results) => {
-        if (error) {
-            console.error('Ошибка при получении списка пользователей: ', error);
-            res.send({ success: false, error: 'Ошибка при получении списка пользователей' });
-        } else {
-            res.send({ success: true, users: results });
-        }
-    });
+  const query = 'SELECT (birthday, name, surname, patronymic) FROM users';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Ошибка при получении списка пользователей: ', error);
+      res.send({ success: false, error: 'Ошибка при получении списка пользователей' });
+    } else {
+      res.send({ success: true, users: results });
+    }
+  });
+});
+
+app.get('/admin/get-users/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'SELECT (birthday, name, surname, patronymic) FROM users WHERE id = ?';
+  connection.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Ошибка при получении пользователя: ', error);
+      res.send({ success: false, error: 'Ошибка при получении пользователя' });
+    } else {
+      res.send({ success: true, user: results[0] });
+    }
+  });
 });
 
 app.post('/admin/login', (req, res) => {
-    const { login, password } = req.body;
-    const query = 'SELECT * FROM admins WHERE login = ? AND password = ?';
-  
-    connection.query(query, [login, password], (error, results) => {
-      if (error) {
-        console.error('Ошибка при выполнении запроса: ', error);
-        res.sendStatus(500);
+  const { login, password } = req.body;
+  const query = 'SELECT * FROM admins WHERE login = ? AND password = ?';
+
+  connection.query(query, [login, password], (error, results) => {
+    if (error) {
+      console.error('Ошибка при выполнении запроса: ', error);
+      res.sendStatus(500);
+    } else {
+      if (results.length > 0) {
+        const admin = results[0];
+        const token = generateToken();
+        const updateQuery = 'UPDATE admins SET token = ? WHERE id = ?';
+        connection.query(updateQuery, [token, admin.id], (updateError) => {
+          if (updateError) {
+            console.error('Ошибка при обновлении токена: ', updateError);
+            res.sendStatus(500);
+          } else {
+            res.send({ success: true, name: admin.name, token: token });
+          }
+        });
       } else {
-        if (results.length > 0) {
-          const admin = results[0];
-          const token = generateToken();
-          const updateQuery = 'UPDATE admins SET token = ? WHERE id = ?';
-          connection.query(updateQuery, [token, admin.id], (updateError) => {
-            if (updateError) {
-              console.error('Ошибка при обновлении токена: ', updateError);
-              res.sendStatus(500);
-            } else {
-              res.send({ result: 'ok', name: admin.name, token: token });
-            }
-          });
-        } else {
-          res.send({ result: 'error', message: 'Неверные данные логина или пароля' });
-        }
+        res.send({ success: false, message: 'Неверные данные логина или пароля' });
       }
-    });
+    }
+  });
 });
 
 app.post('/admin/checkAuth', (req, res) => {
@@ -100,7 +110,7 @@ app.post('/admin/checkAuth', (req, res) => {
 });
 
 app.get('/public', (req, res) => {
-    res.send('Привет, фронтендер!');
+  res.send('Привет, фронтендер!');
 });
 
 const privateKey = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.ru_2023-12-24-18-44_57.key', 'utf8');
@@ -109,5 +119,5 @@ const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(3000, () => {
-    console.log('Сервер запущен на порту 443 (HTTPS)');
+  console.log('Сервер запущен на порту 443 (HTTPS)');
 });
