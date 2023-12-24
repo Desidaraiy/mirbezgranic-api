@@ -32,6 +32,12 @@ function generateToken() {
 
 const app = express();
 
+// For parsing application/json
+app.use(express.json());
+ 
+// For parsing application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
 app.get('/admin', (req, res) => {
     res.send('Привет, администратор!');
 });
