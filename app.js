@@ -102,6 +102,6 @@ const certificate = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.
 const credentials = { key: privateKey, cert: certificate };
 const httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(443, () => {
+httpsServer.listen(3000, () => {
     console.log('Сервер запущен на порту 443 (HTTPS)');
 });
