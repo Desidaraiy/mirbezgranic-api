@@ -159,7 +159,7 @@ app.post('/public/register', (req, res) => {
   });
 });
 
-app.post('public/takeACourse', (req, res) => {
+app.post('/public/takeACourse', (req, res) => {
   const { phone } = req.body;
   const query = 'UPDATE users SET hasTakenCourse = ? WHERE phone = ?';
   connection.query(query, [1, phone], (error, results) => {
