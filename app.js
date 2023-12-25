@@ -58,7 +58,7 @@ app.get('/admin/get-users', (req, res) => {
   connection.query(query, (error, results) => {
     if (error) {
       console.error('Ошибка при получении списка пользователей: ', error);
-      res.send({ success: false, error: 'Ошибка при получении списка пользователей' });
+      res.send({ success: false, error: 'Ошибка при получении списка пользователей :' + error });
     } else {
       res.send({ success: true, users: results });
     }
