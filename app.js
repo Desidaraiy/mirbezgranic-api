@@ -54,7 +54,7 @@ app.get('/admin', (req, res) => {
 });
   
 app.get('/admin/get-users', (req, res) => {
-  const query = 'SELECT (birthday, name, surname, patronymic) FROM users';
+  const query = 'SELECT birthday, name, surname, patronymic FROM users';
   connection.query(query, (error, results) => {
     if (error) {
       console.error('Ошибка при получении списка пользователей: ', error);
@@ -67,7 +67,7 @@ app.get('/admin/get-users', (req, res) => {
 
 app.get('/admin/get-users/:id', (req, res) => {
   const { id } = req.params;
-  const query = 'SELECT (birthday, name, surname, patronymic) FROM users WHERE id = ?';
+  const query = 'SELECT * FROM users WHERE id = ?';
   connection.query(query, [id], (error, results) => {
     if (error) {
       console.error('Ошибка при получении пользователя: ', error);
