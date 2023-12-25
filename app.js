@@ -109,7 +109,7 @@ app.post('/admin/login', (req, res) => {
 app.post('/admin/checkAuth', (req, res) => {
   const { token } = req.body;
   const query = 'SELECT * FROM admins WHERE token = ?';
-  connection.query(query, [login, password, token], (error, results) => {
+  connection.query(query, [token], (error, results) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
       res.sendStatus(500);
