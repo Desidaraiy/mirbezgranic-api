@@ -54,7 +54,7 @@ app.get('/admin', (req, res) => {
 });
   
 app.get('/admin/get-users', (req, res) => {
-  const query = 'SELECT birthday, name, surname, patronymic FROM users';
+  const query = 'SELECT id, birthday, name, surname, patronymic FROM users';
   connection.query(query, (error, results) => {
     if (error) {
       console.error('Ошибка при получении списка пользователей: ', error);
