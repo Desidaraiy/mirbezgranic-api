@@ -93,17 +93,17 @@ app.post('/admin/login', (req, res) => {
 });
 
 app.post('/admin/checkAuth', (req, res) => {
-  const { login, password, token } = req.body;
-  const query = 'SELECT * FROM admins WHERE login = ? AND password = ? AND token = ?';
+  const { token } = req.body;
+  const query = 'SELECT * FROM admins WHERE token = ?';
   connection.query(query, [login, password, token], (error, results) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
       res.sendStatus(500);
     } else {
       if (results.length > 0) {
-        res.send({ result: 'ok' });
+        res.send({ success: true, });
       } else {
-        res.send({ result: 'error' });
+        res.send({ success: false });
       }
     }
   });
