@@ -127,6 +127,55 @@ app.get('/public', (req, res) => {
   res.send('Привет, фронтендер!');
 });
 
+app.post('/public/auth', (req, res) => {
+  const { phone } = req.body;
+  const query = 'SELECT * FROM users WHERE phone = ?';
+  connection.query(query, [phone], (error, results) => {
+    if (error) {
+      console.error('Ошибка при выполнении запроса: ', error);
+      res.sendStatus(500);
+    } else {
+      if (results.length > 0) {
+        res.send({ success: true, user: results[0] });
+      } else {
+        res.send({ success: false });
+      }
+    }
+  })
+})
+
+app.post('/public/register', (req, res) => {
+  const fields = Object.keys(req.body);
+  const values = Object.values(req.body);
+  const query = `INSERT INTO users (${fields.join(', ')}) VALUES (?)`;
+  
+  connection.query(query, [values], (error, results) => {
+    if (error) {
+      console.error('Ошибка при выполнении запроса: ', error);
+      res.sendStatus(500);
+    } else {
+      res.send({ success: true });
+    }
+  });
+});
+
+app.post('public/takeACourse', (req, res) => {
+  const { phone } = req.body;
+  const query = 'UPDATE users SET hasTakenCourse = ? WHERE phone = ?';
+  connection.query(query, [1, phone], (error, results) => {
+    if (error) {
+      console.error('Ошибка при выполнении запроса: ', error);
+      res.sendStatus(500);
+    } else {
+      if (results.length > 0) {
+        res.send({ success: true });
+      } else {
+        res.send({ success: false });
+      }
+    }
+  })
+})
+
 const privateKey = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.ru_2023-12-24-18-44_57.key', 'utf8');
 const certificate = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.ru_2023-12-24-18-44_57.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
