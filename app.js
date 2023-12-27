@@ -145,11 +145,85 @@ app.post('/public/auth', (req, res) => {
 })
 
 app.post('/public/register', (req, res) => {
-  const fields = Object.keys(req.body);
-  const values = Object.values(req.body);
-  const query = `INSERT INTO users (${fields.join(', ')}) VALUES (?)`;
+  const { 
+    phone,
+    push_id,
+    birthday,
+    name,
+    surname,
+    patronymic,
+    country,
+    email,
+    sex, 
+    universityYearOfEntry,
+    universityCourse,
+    universityAcademicUnit,
+    universityUnit,
+    univeristyFaculty,
+    contactPersonName,
+    contactPersonSurname,
+    contactPersonPatronymic,
+    contactPersonPhone,
+    contactPersonIsForMe,
+    contactPersonEmail,
+    documentsDateOfArrival,
+    documentsDateOfVisaExpiring,
+    documentsDateOfPassportExpiring,
+  } = req.body;
   
-  connection.query(query, [values], (error, results) => {
+  const query = `INSERT INTO users (
+    phone,
+    push_id,
+    birthday,
+    name,
+    surname,
+    patronymic,
+    country,
+    email,
+    sex,
+    universityYearOfEntry,
+    universityCourse,
+    universityAcademicUnit,
+    universityUnit,
+    univeristyFaculty,
+    contactPersonName,
+    contactPersonSurname,
+    contactPersonPatronymic,
+    contactPersonPhone,
+    contactPersonIsForMe,
+    contactPersonEmail,
+    documentsDateOfArrival,
+    documentsDateOfVisaExpiring,
+    documentsDateOfPassportExpiring
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  const values = [
+    phone,
+    push_id,
+    birthday,
+    name,
+    surname,
+    patronymic,
+    country,
+    email,
+    sex,
+    universityYearOfEntry,
+    universityCourse,
+    universityAcademicUnit,
+    universityUnit,
+    univeristyFaculty,
+    contactPersonName,
+    contactPersonSurname,
+    contactPersonPatronymic,
+    contactPersonPhone,
+    contactPersonIsForMe,
+    contactPersonEmail,
+    documentsDateOfArrival,
+    documentsDateOfVisaExpiring,
+    documentsDateOfPassportExpiring,
+  ];
+
+  connection.query(query, values, (error, results) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
       res.sendStatus(500);
