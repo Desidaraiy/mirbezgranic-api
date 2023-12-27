@@ -145,6 +145,7 @@ app.post('/public/auth', (req, res) => {
 })
 
 app.post('/public/register', (req, res) => {
+
   const { 
     phone,
     push_id,
@@ -227,7 +228,7 @@ app.post('/public/register', (req, res) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
       // res.sendStatus(500);
-      res.send({ success: false, message: 'Произошла ошибка при регистрации: ' + error + ', phone is ' + phone  + ' req is ' + req.body });
+      res.send({ success: false, message: 'Произошла ошибка при регистрации: ' + error + ', phone is ' + phone  + ' req is ' + JSON.stringify(req.body) });
     } else {
       res.send({ success: true });
     }
