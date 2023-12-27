@@ -226,7 +226,8 @@ app.post('/public/register', (req, res) => {
   connection.query(query, values, (error, results) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
-      res.sendStatus(500);
+      // res.sendStatus(500);
+      res.send({ success: false, message: 'Произошла ошибка при регистрации: ' + error });
     } else {
       res.send({ success: true });
     }
