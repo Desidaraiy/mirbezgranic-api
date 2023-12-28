@@ -26,7 +26,7 @@ let transporter = nodemailer.createTransport({
   secure: true,
   auth: {
       user: 'info@mirbezgranic-novsu.ru',
-      pass: a0t9s7zcLhEasbzO,
+      pass: 'a0t9s7zcLhEasbzO',
   },
 });
 
