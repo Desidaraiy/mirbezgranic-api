@@ -31,7 +31,8 @@ let transporter = nodemailer.createTransport({
 });
 
 async function sendSosEmail (user, message){
-  let result = await transporter.sendMail({
+  let result = 'ok';
+  transporter.sendMail({
     from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
     to: 'kent2011981@gmail.com',
     subject: 'Тревожная кнопка. Мир Без Границ.',
@@ -46,6 +47,12 @@ async function sendSosEmail (user, message){
         <li>Фамилия: ${user.surnName}</li>
       </ul>
     `,
+  }, (error, response) => {
+    if(error) {
+      result = error
+    }else{ 
+      result = response
+    }
   });
   return result;
 }
