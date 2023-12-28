@@ -49,9 +49,9 @@ async function sendSosEmail (user, message){
     `,
   }, (error, response) => {
     if(error) {
-      return result = error
+      return error
     }else{ 
-      return result = response
+      return response
     }
   });
   // return result;
