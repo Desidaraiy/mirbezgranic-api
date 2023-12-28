@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const https = require("https");
 const fs = require("fs");
+const nodemailer = require('nodemailer');
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -18,6 +19,35 @@ connection.connect((err) => {
     console.log('Подключение к базе данных успешно установлено');
   }
 });
+
+let transporter = nodemailer.createTransport({
+  host: 'mirbezgranic-novsu.ru',
+  port: 465,
+  secure: true,
+  auth: {
+      user: 'info@mirbezgranic-novsu.ru',
+      pass: a0t9s7zcLhEasbzO,
+  },
+});
+
+async function sendSosEmail (user, message){
+  await transporter.sendMail({
+    from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
+    to: 'kent2011981@gmail.com',
+    subject: 'Тревожная кнопка. Мир Без Границ.',
+    html: `
+      <h1>Добрый день</h1>
+      <h2>Пользователь запросил помощь</h2>
+      <p>${message}</p>
+      <ul>
+        <li>Телефон: ${user.phone}</li>
+        <li>Email: ${user.email}</li>
+        <li>Имя: ${user.name}</li>
+        <li>Фамилия: ${user.surnName}</li>
+      </ul>
+    `,
+  });
+}
 
 function generateToken() {
   const length = 20; // Длина токена
@@ -249,6 +279,24 @@ app.post('/public/takeACourse', (req, res) => {
         res.send({ success: false });
       }
     }
+  })
+})
+
+app.post('/public/sendEmailSos', (req, res) => {
+  const { id, message } = req.body;
+  const userbyId = `SELECT * FROM users WHERE id = ${id}`;
+  connection.query(userbyId, async  (error, results) => {
+    if (error) {
+      res.send({success: false, message: 'Произошла ошибка. ' + error});
+    } else {
+      if (results.length > 0) {
+        const user = results[0];
+        await sendSosEmail(user, message);
+        res.send({ success: true });
+      } else {
+        res.send({ success: false });
+      }
+    }    
   })
 })
 
