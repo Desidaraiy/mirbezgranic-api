@@ -60,8 +60,7 @@ async function sendRVPOEmail (user, type){
     subject: subject,
     html: `
       <h1>Добрый день</h1>
-      <h2>Пользователь запросил помощь</h2>
-      <p>Cообщение: ${message}</p>
+      <h2>${message}</h2>
       <ul style="font-size: 20px">
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
@@ -83,8 +82,7 @@ async function sendAcademicEmail (user, type){
     subject: subject,
     html: `
       <h1>Добрый день</h1>
-      <h2>Пользователь запросил помощь</h2>
-      <p>Cообщение: ${message}</p>
+      <h2>${message}</h2>
       <ul style="font-size: 20px">
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
