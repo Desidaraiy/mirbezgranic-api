@@ -49,12 +49,12 @@ async function sendSosEmail (user, message){
     `,
   }, (error, response) => {
     if(error) {
-      result = error
+      return result = error
     }else{ 
-      result = response
+      return result = response
     }
   });
-  return result;
+  // return result;
 }
 
 function generateToken() {
