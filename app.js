@@ -39,17 +39,63 @@ async function sendSosEmail (user, message){
     html: `
       <h1>Добрый день</h1>
       <h2>Пользователь запросил помощь</h2>
-      <p>${message}</p>
-      <ul>
+      <p>Cообщение: ${message}</p>
+      <ul style="font-size: 20px">
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
         <li>Имя: ${user.name}</li>
-        <li>Фамилия: ${user.surnName}</li>
+        <li>Фамилия: ${user.surName}</li>
       </ul>
     `,
   });
   return result;
 }
+
+async function sendRVPOEmail (user, type){
+  let message = type === 1 ? 'Пользователь заказал справку о регистрации' : 'Пользователь заказал справку для РВПО';
+  let subject = type === 1 ? 'Заказана справка о регистрации. Мир Без Границ' : 'Заказана справка для РВПО. Мир Без Границ';
+  let result = await transporter.sendMail({
+    from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
+    to: 'kent2011981@gmail.com',
+    subject: subject,
+    html: `
+      <h1>Добрый день</h1>
+      <h2>Пользователь запросил помощь</h2>
+      <p>Cообщение: ${message}</p>
+      <ul style="font-size: 20px">
+        <li>Телефон: ${user.phone}</li>
+        <li>Email: ${user.email}</li>
+        <li>Имя: ${user.name}</li>
+        <li>Фамилия: ${user.surName}</li>
+      </ul>
+    `,
+  });
+  return result;
+}
+
+
+async function sendAcademicEmail (user, type){
+  let message = type === 1 ? 'Пользователь заказал справку об обучении' : 'Пользователь заказал академическую справку';
+  let subject = type === 1 ? 'Заказана справка об обучении. Мир Без Границ' : 'Заказана академическая справка. Мир Без Границ';
+  let result = await transporter.sendMail({
+    from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
+    to: 'kent2011981@gmail.com',
+    subject: subject,
+    html: `
+      <h1>Добрый день</h1>
+      <h2>Пользователь запросил помощь</h2>
+      <p>Cообщение: ${message}</p>
+      <ul style="font-size: 20px">
+        <li>Телефон: ${user.phone}</li>
+        <li>Email: ${user.email}</li>
+        <li>Имя: ${user.name}</li>
+        <li>Фамилия: ${user.surName}</li>
+      </ul>
+    `,
+  });
+  return result;
+}
+
 
 function generateToken() {
   const length = 20; // Длина токена
@@ -294,6 +340,42 @@ app.post('/public/sendEmailSos', (req, res) => {
       if (results.length > 0) {
         const user = results[0];
         let result = await sendSosEmail(user, message);
+        res.send({ success: true, result: result});
+      } else {
+        res.send({ success: false });
+      }
+    }    
+  })
+})
+
+app.post('/public/sendRVPOEmail', (req, res) => {
+  const { id, type } = req.body;
+  const userbyId = `SELECT * FROM users WHERE id = ${id}`;
+  connection.query(userbyId, async  (error, results) => {
+    if (error) {
+      res.send({success: false, message: 'Произошла ошибка. ' + error});
+    } else {
+      if (results.length > 0) {
+        const user = results[0];
+        let result = await sendRVPOEmail(user, type);
+        res.send({ success: true, result: result});
+      } else {
+        res.send({ success: false });
+      }
+    }    
+  })
+})
+
+app.post('/public/sendAcademicEmail', (req, res) => {
+  const { id, type } = req.body;
+  const userbyId = `SELECT * FROM users WHERE id = ${id}`;
+  connection.query(userbyId, async  (error, results) => {
+    if (error) {
+      res.send({success: false, message: 'Произошла ошибка. ' + error});
+    } else {
+      if (results.length > 0) {
+        const user = results[0];
+        let result = await sendAcademicEmail(user, type);
         res.send({ success: true, result: result});
       } else {
         res.send({ success: false });
