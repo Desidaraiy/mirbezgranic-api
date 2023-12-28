@@ -44,7 +44,7 @@ async function sendSosEmail (user, message){
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
         <li>Имя: ${user.name}</li>
-        <li>Фамилия: ${user.surName}</li>
+        <li>Фамилия: ${user.surname}</li>
       </ul>
     `,
   });
@@ -66,7 +66,7 @@ async function sendRVPOEmail (user, type){
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
         <li>Имя: ${user.name}</li>
-        <li>Фамилия: ${user.surName}</li>
+        <li>Фамилия: ${user.surname}</li>
       </ul>
     `,
   });
@@ -89,7 +89,7 @@ async function sendAcademicEmail (user, type){
         <li>Телефон: ${user.phone}</li>
         <li>Email: ${user.email}</li>
         <li>Имя: ${user.name}</li>
-        <li>Фамилия: ${user.surName}</li>
+        <li>Фамилия: ${user.surname}</li>
       </ul>
     `,
   });
