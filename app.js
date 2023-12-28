@@ -241,7 +241,7 @@ app.post('/public/takeACourse', (req, res) => {
   connection.query(query, [1, phone], (error, results) => {
     if (error) {
       console.error('Ошибка при выполнении запроса: ', error);
-      res.sendStatus(500);
+      res.send({success : false, message: 'Произошла ошибка при регистрации: ' + error + ', phone is ' + phone  + ' req is ' + JSON.stringify(req.body) });
     } else {
       if (results.length > 0) {
         res.send({ success: true });
