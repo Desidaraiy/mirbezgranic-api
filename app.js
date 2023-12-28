@@ -21,7 +21,8 @@ connection.connect((err) => {
 });
 
 let transporter = nodemailer.createTransport({
-  host: 'mirbezgranic-novsu.ru',
+  host: 'smtp.beget.com',
+  name: 'mirbezgranic-novsu.ru',
   port: 465,
   secure: true,
   auth: {
