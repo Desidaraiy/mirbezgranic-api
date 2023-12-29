@@ -72,32 +72,9 @@ async function sendRVPOEmail (user, type){
   return result;
 }
 
-
-async function sendAcademicEmail (user, type){
-  let message = type === 1 ? 'Пользователь заказал справку об обучении' : 'Пользователь заказал академическую справку';
-  let subject = type === 1 ? 'Заказана справка об обучении. Мир Без Границ' : 'Заказана академическая справка. Мир Без Границ';
-  let result = await transporter.sendMail({
-    from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
-    to: 'kent2011981@gmail.com',
-    subject: subject,
-    html: `
-      <h1>Добрый день</h1>
-      <h2>${message}</h2>
-      <ul style="font-size: 20px">
-        <li>Телефон: ${user.phone}</li>
-        <li>Email: ${user.email}</li>
-        <li>Имя: ${user.name}</li>
-        <li>Фамилия: ${user.surname}</li>
-      </ul>
-    `,
-  });
-  return result;
-}
-
-
 function generateToken() {
-  const length = 20; // Длина токена
-  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Допустимые символы
+  const length = 20;
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let token = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
@@ -365,7 +342,43 @@ app.post('/public/sendRVPOEmail', (req, res) => {
 })
 
 app.post('/public/sendAcademicEmail', (req, res) => {
-  const { id, type } = req.body;
+  const { id, type, form } = req.body;
+
+  if(type === 0){ 
+    const { certificateCitizenship, fullVisaNameRus, fullVisaNameLat, course, speciality, groupNumber, email, yearSchool } = form
+
+    const htmlForm = `
+      <h2>Заполненная форма</h2>
+      <ul>
+        <li>Гражданство: ${certificateCitizenship}</li>
+        <li>Имя полностью на русском: ${fullVisaNameRus}</li>
+        <li>Имя полностью на английском: ${fullVisaNameLat}</li>
+        <li>Курс: ${course}</li>
+        <li>Номер группы: ${groupNumber}</li>
+        <li>Специальность: ${speciality}</li>
+        <li>Год окончания школы: ${yearSchool}</li>
+        <li>Почта: ${email}</li>
+      </ul>
+    `
+  }else { 
+    const { certificateCitizenship, passportNumber, dateOfBirth, fullVisaNameRus, fullVisaNameLat, course, speciality, email, certificateLanguage } = form
+
+    const htmlForm = `
+    <h2>Заполненная форма</h2>
+    <ul>
+      <li>Гражданство: ${certificateCitizenship}</li>
+      <li>Номер паспорта: ${passportNumber}</li>
+      <li>Дата рождения: ${dateOfBirth}</li>
+      <li>Имя полностью на русском: ${fullVisaNameRus}</li>
+      <li>Имя полностью на английском: ${fullVisaNameLat}</li>
+      <li>Курс: ${course}</li>
+      <li>Специальность: ${speciality}</li>
+      <li>Почта: ${email}</li>
+      <li>Язык справки: ${certificateLanguage}</li>
+    </ul>
+  `
+  }
+
   const userbyId = `SELECT * FROM users WHERE id = ${id}`;
   connection.query(userbyId, async  (error, results) => {
     if (error) {
@@ -373,7 +386,7 @@ app.post('/public/sendAcademicEmail', (req, res) => {
     } else {
       if (results.length > 0) {
         const user = results[0];
-        let result = await sendAcademicEmail(user, type);
+        let result = await sendAcademicEmail(user, type, htmlForm);
         res.send({ success: true, result: result});
       } else {
         res.send({ success: false });
@@ -381,6 +394,28 @@ app.post('/public/sendAcademicEmail', (req, res) => {
     }    
   })
 })
+
+async function sendAcademicEmail (user, type, form){
+  let message = type === 1 ? 'Пользователь заказал справку об обучении' : 'Пользователь заказал академическую справку';
+  let subject = type === 1 ? 'Заказана справка об обучении. Мир Без Границ' : 'Заказана академическая справка. Мир Без Границ';
+  let result = await transporter.sendMail({
+    from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
+    to: 'kent2011981@gmail.com',
+    subject: subject,
+    html: `
+      <h1>Добрый день</h1>
+      <h2>${message}</h2>
+      <ul style="font-size: 20px">
+        <li>Телефон: ${user.phone}</li>
+        <li>Email: ${user.email}</li>
+        <li>Имя: ${user.name}</li>
+        <li>Фамилия: ${user.surname}</li>
+      </ul>
+      ${form}
+    `,
+  });
+  return result;
+}
 
 const privateKey = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.ru_2023-12-24-18-44_57.key', 'utf8');
 const certificate = fs.readFileSync('/var/www/httpd-cert/api.mirbezgranic-novsu.ru_2023-12-24-18-44_57.crt', 'utf8');
