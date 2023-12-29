@@ -343,42 +343,6 @@ app.post('/public/sendRVPOEmail', (req, res) => {
 
 app.post('/public/sendAcademicEmail', (req, res) => {
   const { id, type, form } = req.body;
-
-  if(type === 0){ 
-    const { certificateCitizenship, fullVisaNameRus, fullVisaNameLat, course, speciality, groupNumber, email, yearSchool } = form
-
-    const htmlForm = `
-      <h2>Заполненная форма</h2>
-      <ul>
-        <li>Гражданство: ${certificateCitizenship}</li>
-        <li>Имя полностью на русском: ${fullVisaNameRus}</li>
-        <li>Имя полностью на английском: ${fullVisaNameLat}</li>
-        <li>Курс: ${course}</li>
-        <li>Номер группы: ${groupNumber}</li>
-        <li>Специальность: ${speciality}</li>
-        <li>Год окончания школы: ${yearSchool}</li>
-        <li>Почта: ${email}</li>
-      </ul>
-    `
-  }else { 
-    const { certificateCitizenship, passportNumber, dateOfBirth, fullVisaNameRus, fullVisaNameLat, course, speciality, email, certificateLanguage } = form
-
-    const htmlForm = `
-    <h2>Заполненная форма</h2>
-    <ul>
-      <li>Гражданство: ${certificateCitizenship}</li>
-      <li>Номер паспорта: ${passportNumber}</li>
-      <li>Дата рождения: ${dateOfBirth}</li>
-      <li>Имя полностью на русском: ${fullVisaNameRus}</li>
-      <li>Имя полностью на английском: ${fullVisaNameLat}</li>
-      <li>Курс: ${course}</li>
-      <li>Специальность: ${speciality}</li>
-      <li>Почта: ${email}</li>
-      <li>Язык справки: ${certificateLanguage}</li>
-    </ul>
-  `
-  }
-
   const userbyId = `SELECT * FROM users WHERE id = ${id}`;
   connection.query(userbyId, async  (error, results) => {
     if (error) {
@@ -386,6 +350,41 @@ app.post('/public/sendAcademicEmail', (req, res) => {
     } else {
       if (results.length > 0) {
         const user = results[0];
+
+        if(type === 0){ 
+          const { certificateCitizenship, fullVisaNameRus, fullVisaNameLat, course, speciality, groupNumber, email, yearSchool } = form
+      
+          const htmlForm = `
+            <h2>Заполненная форма</h2>
+            <ul>
+              <li>Гражданство: ${certificateCitizenship}</li>
+              <li>Имя полностью на русском: ${fullVisaNameRus}</li>
+              <li>Имя полностью на английском: ${fullVisaNameLat}</li>
+              <li>Курс: ${course}</li>
+              <li>Номер группы: ${groupNumber}</li>
+              <li>Специальность: ${speciality}</li>
+              <li>Год окончания школы: ${yearSchool}</li>
+              <li>Почта: ${email}</li>
+            </ul>
+          `
+        }else { 
+          const { certificateCitizenship, passportNumber, dateOfBirth, fullVisaNameRus, fullVisaNameLat, course, speciality, email, certificateLanguage } = form
+      
+          const htmlForm = `
+          <h2>Заполненная форма</h2>
+          <ul>
+            <li>Гражданство: ${certificateCitizenship}</li>
+            <li>Номер паспорта: ${passportNumber}</li>
+            <li>Дата рождения: ${dateOfBirth}</li>
+            <li>Имя полностью на русском: ${fullVisaNameRus}</li>
+            <li>Имя полностью на английском: ${fullVisaNameLat}</li>
+            <li>Курс: ${course}</li>
+            <li>Специальность: ${speciality}</li>
+            <li>Почта: ${email}</li>
+            <li>Язык справки: ${certificateLanguage}</li>
+          </ul>
+        `
+        }
         let result = await sendAcademicEmail(user, type, htmlForm);
         res.send({ success: true, result: result});
       } else {
