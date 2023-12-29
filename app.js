@@ -34,7 +34,7 @@ let transporter = nodemailer.createTransport({
 async function sendSosEmail (user, message){
   let result = await transporter.sendMail({
     from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
-    to: 'kent2011981@gmail.com',
+    to: 'dmsnovsu@gmail.com',
     subject: 'Тревожная кнопка. Мир Без Границ.',
     html: `
       <h1>Добрый день</h1>
@@ -56,7 +56,7 @@ async function sendRVPOEmail (user, type){
   let subject = type === 1 ? 'Заказана справка о регистрации. Мир Без Границ' : 'Заказана справка для РВПО. Мир Без Границ';
   let result = await transporter.sendMail({
     from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
-    to: 'kent2011981@gmail.com',
+    to: 'otdelmuvr@gmail.com',
     subject: subject,
     html: `
       <h1>Добрый день</h1>
@@ -399,7 +399,7 @@ async function sendAcademicEmail (user, type, form){
   let subject = type === 1 ? 'Заказана справка об обучении. Мир Без Границ' : 'Заказана академическая справка. Мир Без Границ';
   let result = await transporter.sendMail({
     from: '"Мир без границ" <info@mirbezgranic-novsu.ru>',
-    to: 'kent2011981@gmail.com',
+    to: 'fro@novsu.ru',
     subject: subject,
     html: `
       <h1>Добрый день</h1>
