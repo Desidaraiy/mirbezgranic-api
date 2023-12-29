@@ -356,7 +356,7 @@ app.post('/public/sendAcademicEmail', (req, res) => {
       
           htmlForm = `
             <h2>Заполненная форма</h2>
-            <ul>
+            <ul style="font-size: 20px">
               <li>Гражданство: ${certificateCitizenship}</li>
               <li>Имя полностью на русском: ${fullVisaNameRus}</li>
               <li>Имя полностью на английском: ${fullVisaNameLat}</li>
@@ -372,7 +372,7 @@ app.post('/public/sendAcademicEmail', (req, res) => {
       
           htmlForm = `
           <h2>Заполненная форма</h2>
-          <ul>
+          <ul style="font-size: 20px">
             <li>Гражданство: ${certificateCitizenship}</li>
             <li>Номер паспорта: ${passportNumber}</li>
             <li>Дата рождения: ${dateOfBirth}</li>
