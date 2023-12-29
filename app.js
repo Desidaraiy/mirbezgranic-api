@@ -350,11 +350,11 @@ app.post('/public/sendAcademicEmail', (req, res) => {
     } else {
       if (results.length > 0) {
         const user = results[0];
-
+        let htmlForm;
         if(type === 0){ 
           const { certificateCitizenship, fullVisaNameRus, fullVisaNameLat, course, speciality, groupNumber, email, yearSchool } = form
       
-          const htmlForm = `
+          htmlForm = `
             <h2>Заполненная форма</h2>
             <ul>
               <li>Гражданство: ${certificateCitizenship}</li>
@@ -370,7 +370,7 @@ app.post('/public/sendAcademicEmail', (req, res) => {
         }else { 
           const { certificateCitizenship, passportNumber, dateOfBirth, fullVisaNameRus, fullVisaNameLat, course, speciality, email, certificateLanguage } = form
       
-          const htmlForm = `
+          htmlForm = `
           <h2>Заполненная форма</h2>
           <ul>
             <li>Гражданство: ${certificateCitizenship}</li>
